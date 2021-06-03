@@ -1,6 +1,7 @@
 import React from "react";
 import {
   getAllByTestId,
+  getByText,
   render,
   screen,
   waitFor,
@@ -69,6 +70,55 @@ test('renders "lastName is a required field" if an last name is not entered and 
   expect(error);
 });
 
-test("renders all firstName, lastName and email text when submitted. Does NOT render message if message is not submitted.", async () => {});
+test("renders all firstName, lastName and email text when submitted. Does NOT render message if message is not submitted.", async () => {
+  let contactNode = render(<ContactForm />);
+  /* Get Form Fields */
 
-test("renders all fields text when all fields are submitted.", async () => {});
+  let firstnameField = contactNode.getByLabelText(/First Name\*/i);
+  let lastnameField = contactNode.getByLabelText(/Last Name\*/);
+  let emailField = contactNode.getByLabelText(/Email\*/)
+  let submitButton = contactNode.getByTestId(/submitTest/i);
+  /* Fill out Form */
+
+  userEvent.type(firstnameField, "Taheel");
+  userEvent.type(lastnameField, "Remaarwa");
+  userEvent.type(emailField, 'test@test.com')
+  
+  /* Submit form */
+  userEvent.click(submitButton);
+
+  /* Verify there are no errors */
+  let errors = contactNode.queryAllByTestId("error");
+  expect(errors === null);
+
+  /* Verify form inputs are now rendered */
+  contactNode.getByText('Taheel');
+  contactNode.getByText('Remaarwa')
+  contactNode.getByText('test@test.com')
+});
+
+test("renders all fields text when all fields are submitted.", async () => {
+  let contactNode = render(<ContactForm />);
+  /* Get Form Fields */
+
+  let firstnameField = contactNode.getByLabelText(/First Name\*/i);
+  let lastnameField = contactNode.getByLabelText(/Last Name\*/);
+  let emailField = contactNode.getByLabelText(/Email\*/)
+  let messageField = contactNode.getByLabelText(/Message/i)
+  let submitButton = contactNode.getByTestId(/submitTest/i);
+  /* Fill out Form */
+
+  userEvent.type(firstnameField, "Taheel");
+  userEvent.type(lastnameField, "Remaarwa");
+  userEvent.type(emailField, 'test@test.com')
+  userEvent.type(messageField, 'LAWOALTOAJWTLAKTWAKTLK')
+  
+  /* Submit form */
+  userEvent.click(submitButton);
+
+  /* Verify form inputs are now rendered */
+  contactNode.getByTestId('firstnameDisplay');
+  contactNode.getByTestId('lastnameDisplay')
+  contactNode.getByTestId('emailDisplay')
+  contactNode.getByTestId('messageDisplay')
+});
