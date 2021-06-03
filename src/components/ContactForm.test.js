@@ -3,13 +3,17 @@ import {render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import ContactForm from './ContactForm';
+let contactNode;
 
 test('renders without errors', ()=>{
-    
+    contactNode = render(<ContactForm />)
 });
 
 test('renders the contact form header', ()=> {
-    
+
+    contactNode = render(<ContactForm />)
+    const header = contactNode.getByText("Contact Form")
+    expect(header).toBeVisible();
 });
 
 test('renders ONE error message if user enters less then 5 characters into firstname.', async () => {
